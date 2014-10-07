@@ -40,6 +40,7 @@ class Insteon {
 		int _command;
 		int _level;
 		int _random;
+		bool _level_is_raw;
 
 		string getDeviceURL();
 		string getRelayURL();
@@ -52,7 +53,7 @@ class Insteon {
 		Insteon(string, int, string, string);
 		void setType(int);
 		bool setDevice(string);
-		void setLevel(int);
+		void setLevel(int, bool);
 		void setCommand(int);
 		
 		string getURL();

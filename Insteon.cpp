@@ -15,6 +15,7 @@ Insteon::Insteon(string in_IP, int in_port, string in_user, string in_pass)
 	_username = in_user;
 	_password = in_pass;
 	_random = rand() % 100 + 1;
+	_level_is_raw = false;
 }
 
 string Insteon::getSceneURL()
@@ -150,9 +151,10 @@ void Insteon::setType(int in_type)
 	_deviceType = in_type;
 }
 
-void Insteon::setLevel(int in_level)
+void Insteon::setLevel(int in_level, bool in_raw_level = false)
 {
 	_level = in_level;
+	_level_is_raw = in_raw_level;
 }
 
 void Insteon::setCommand(int in_command)
@@ -174,11 +176,19 @@ void Insteon::setCommand(int in_command)
 
 string Insteon::getLevel()
 {
+	stringstream _s_hex;
+	unsigned char hex_level;
+
 	if (_level < 0)
 		return string("ZZ");
 
-	stringstream _s_hex;
-	unsigned char hex_level = (_level * 255) / 100;
+	if (_level_is_raw)
+	{
+		hex_level = _level;
+	} else
+	{
+		hex_level = (_level * 255) / 100;
+	}
 	_s_hex << std::setw(2) << uppercase << hex << std::setfill('0') << (int)hex_level;
 	return _s_hex.str();
 }
