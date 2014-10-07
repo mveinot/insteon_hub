@@ -9,7 +9,7 @@
 #include <Insteon.h>
 #include <tinyxml2.h>
 
-#define __HUB_VERSION__ "0.9.0"
+#define __HUB_VERSION__ "0.9.1"
 
 using namespace std;
 
