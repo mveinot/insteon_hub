@@ -443,7 +443,7 @@ void showHelp(char *in_progname)
 	cout << "  -U, --username=USER		override Hub username" << endl;
 	cout << "  -P, --password=PASS		override Hub password" << endl;
 	cout << "  -l, --level=LEVEL		set dim/bright percent" << endl;
-	cout << "      --byte_value			interpret LEVEL as byte value (0-255)" << endl;
+	cout << "      --byte_value		interpret LEVEL as byte value (0-255)" << endl;
 	cout << "      --heat			set HVAC system to heating mode" << endl;
  	cout << "      --cool			set HVAC system to cooling mode" << endl;
 	cout << "      --auto			set HVAC system to auto mode" << endl;
@@ -458,6 +458,7 @@ void showHelp(char *in_progname)
 	cout << "      --off			send Off command to specified device" << endl;
 	cout << "      --dim			send Dim command to specified device" << endl;
 	cout << "      --bright			send Bright command to specified device" << endl;
+	cout << "      --no_action		Display the URL that is generated, but don't send it to the Hub" << endl;
 	cout << "      --status			retrieve status of specified device" << endl << endl;
 	cout << "Exit status:" << endl;
 	cout << " Returns HTTP status code from hub if no other errors, or 1 otherwise." << endl;
