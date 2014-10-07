@@ -35,6 +35,8 @@ int main(int argc, char** argv) {
 
 	bool verbose = false;
 	bool celsius = false;
+	bool raw_level = false;
+	bool no_action = false;
 
 	string IP;
 	int port = 0;
@@ -99,6 +101,8 @@ int main(int argc, char** argv) {
 		{"set_heating",	required_argument,		NULL, 'h'},
 		{"fahrenheit",	no_argument,		NULL, 212},
 		{"celsius",	no_argument,		NULL, 211},
+		{"byte_value", no_argument,		NULL, 210},
+		{"no_action", no_argument,		NULL, 209},
 		{0,0,0,0},
 	};
 
@@ -267,6 +271,12 @@ int main(int argc, char** argv) {
 			case 211:
 				celsius = true;
 				break;
+			case 210:
+				raw_level = true;
+				break;
+			case 209:
+				no_action = true;
+				break;
 			case 'l':
 				pct_level = atoi(optarg);
 
@@ -318,7 +328,7 @@ int main(int argc, char** argv) {
 	insteon.setType(device_type);
 	insteon.setDevice(device);
 	insteon.setCommand(command);
-	insteon.setLevel(pct_level);
+	insteon.setLevel(pct_level, raw_level);
 
 	if (verbose)
 	{
@@ -327,7 +337,13 @@ int main(int argc, char** argv) {
 			cout << "Converted dim level:         " << insteon.getLevel() << endl;
 		if (device_type == THERMOSTAT)
 			cout << "Converted temperature:       " << insteon.getTemp() << endl;
+	}
+
+	if (verbose || no_action)
+	{
 		cout << "Insteon Hub URL:             " << insteon.getURL() << endl;
+		if (no_action)
+			return 0;
 	}
 
 	//Initializing the CURL module
@@ -427,6 +443,7 @@ void showHelp(char *in_progname)
 	cout << "  -U, --username=USER		override Hub username" << endl;
 	cout << "  -P, --password=PASS		override Hub password" << endl;
 	cout << "  -l, --level=LEVEL		set dim/bright percent" << endl;
+	cout << "      --byte_value			interpret LEVEL as byte value (0-255)" << endl;
 	cout << "      --heat			set HVAC system to heating mode" << endl;
  	cout << "      --cool			set HVAC system to cooling mode" << endl;
 	cout << "      --auto			set HVAC system to auto mode" << endl;
