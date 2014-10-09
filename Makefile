@@ -1,7 +1,6 @@
 CXX = g++
 CURLLIBS = `curl-config --libs`
 LIBS = $(CURLLIBS)
-INCLUDES = -I.
 CXXFLAGS = -Wall -O2
 TARGET = hub_command
 

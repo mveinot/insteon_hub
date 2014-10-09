@@ -6,10 +6,9 @@
 #include <pwd.h>
 #include <curl/curl.h>
 #include <getopt.h>
-#include <Insteon.h>
-#include <tinyxml2.h>
-
-#define __HUB_VERSION__ "0.9.1"
+#include "tinyxml2.h"
+#include "Insteon.h"
+#include "version.h"
 
 using namespace std;
 
@@ -356,10 +355,15 @@ int main(int argc, char** argv) {
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_to_string);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &pagedata);
 		curl_easy_setopt(curl,CURLOPT_URL, insteon.getURL().c_str());
+		if (verbose)
+			cout << "Sending command..." << endl;
 		res = curl_easy_perform(curl);
 
 		if (verbose)
-			cout << pagedata << endl << endl;
+		{
+			cout << "Hub returned:" << endl;
+			cout << pagedata << endl;
+		}
 
 		if (command == STATUS)
 		{
