@@ -20,7 +20,8 @@ size_t curl_to_string(void *ptr, size_t size, size_t count, void *stream);
 void showHelp(char *in_progname);
 void showVersion();
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 	long http_code = 0;
 	CURL *curl;
 	CURLcode res;
@@ -57,7 +58,7 @@ int main(int argc, char** argv) {
 	doc.LoadFile(configfile);
 	if (doc.ErrorID())
 	{
-		cout << "Config file not found" << endl;
+		cout << "Config file not found or XML format error." << endl;
 	} else
 	{
 		const char *_c_ip = doc.FirstChildElement("hub")->FirstChildElement("ip")->GetText();
