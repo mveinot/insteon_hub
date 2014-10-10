@@ -4,7 +4,7 @@ LIBS = $(CURLLIBS)
 CXXFLAGS = -Wall -O2
 TARGET = hub_command
 
-OBJECTS = Insteon.o tinyxml2.o main.o
+OBJECTS = Insteon.o Device.o tinyxml2.o main.o
 
 .PHONY: all clean
 
