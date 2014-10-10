@@ -6,8 +6,10 @@
 #include <pwd.h>
 #include <curl/curl.h>
 #include <getopt.h>
+#include <vector>
 #include "tinyxml2.h"
 #include "Insteon.h"
+#include "Device.h"
 #include "version.h"
 
 using namespace std;
@@ -54,6 +56,7 @@ int main(int argc, char** argv)
 	const char *homedir = pw->pw_dir;
 	config << string(homedir) << "/.insteon_hub";
 	const char *configfile = config.str().c_str();
+	vector<Device *> DeviceList;
 
 	doc.LoadFile(configfile);
 	if (doc.ErrorID())
@@ -70,6 +73,15 @@ int main(int argc, char** argv)
 		port = atoi(_c_port);
 		username = string(_c_username);
 		password = string(_c_password);
+
+		tinyxml2::XMLElement *devices = doc.FirstChildElement("devices");
+		tinyxml2::XMLElement *child = devices->FirstChildElement("device");
+		while (child != NULL)
+		{
+			DeviceList.push_back(new Device(child->Attribute("address"), child->Attribute("name"), atoi(child->Attribute("type"))));
+//			cout << child->Attribute("name") << " : " << child->Attribute("address") << endl;
+			child = child->NextSiblingElement();
+		}
 	}
 
 	const struct option longopts[] = 
@@ -103,6 +115,7 @@ int main(int argc, char** argv)
 		{"celsius",	no_argument,		NULL, 211},
 		{"byte_value", no_argument,		NULL, 210},
 		{"no_action", no_argument,		NULL, 209},
+		{"name", required_argument,	NULL, 208},
 		{0,0,0,0},
 	};
 
@@ -277,6 +290,27 @@ int main(int argc, char** argv)
 			case 209:
 				no_action = true;
 				break;
+			case 208:
+			{
+				string tmp_name = string(optarg);
+
+				for (int i = 0; i < DeviceList.size(); i++)
+				{
+					string iter_name = DeviceList[i]->getName();
+
+					if (iter_name == tmp_name)
+					{
+						if (verbose)
+							cout << "Found device named \"" << tmp_name << "\" with address: " << DeviceList[i]->getAddress() << endl;
+
+						device_type = DeviceList[i]->getType();
+						device = DeviceList[i]->getAddress();
+					}
+				}
+				if (device_type == 0 && verbose)
+					cout << "No device found named \"" << tmp_name << "\"" << endl;
+				break;
+			}
 			case 'l':
 				pct_level = atoi(optarg);
 
@@ -285,6 +319,7 @@ int main(int argc, char** argv)
 				break;
 		}
 	}
+
 
 	if (device_type == 0)
 	{
