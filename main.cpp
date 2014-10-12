@@ -116,6 +116,7 @@ int main(int argc, char** argv)
 		{"byte_value", no_argument,		NULL, 210},
 		{"no_action", no_argument,		NULL, 209},
 		{"name", required_argument,	NULL, 208},
+		{"list", no_argument, NULL, 207},
 		{0,0,0,0},
 	};
 
@@ -311,6 +312,20 @@ int main(int argc, char** argv)
 					cout << "No device found named \"" << tmp_name << "\"" << endl;
 				break;
 			}
+			case 207:
+				cout << "The following device names are defined in the config file:" << endl;
+
+				for (int i = 0; i < DeviceList.size(); i++)
+				{
+					string iter_name = DeviceList[i]->getName();
+					string iter_device = DeviceList[i]->getAddress();
+
+					cout << "\"" << iter_name << "\" is an alias for device address " << iter_device << endl;
+				}
+
+				cout << endl;
+				return 0;
+				break;
 			case 'l':
 				pct_level = atoi(optarg);
 
@@ -478,6 +493,8 @@ void showHelp(char *in_progname)
 	cout << "  -d, --dimmer=ID		specify dimmer device with its address" << endl;
 	cout << "  -t, --thermostat=ID		specify thermostat device with its address" << endl;
 	cout << "  -s, --scene=ID		specify scene with its identifier" << endl;
+	cout << "      --name=ALIAS		specify device using a defined alias" << endl;
+	cout << "      --list			list all defined device aliases" << endl;
 	cout << "  -a, --address=IP		override Hub IP address" << endl;
 	cout << "  -p, --port=PORT		override Hub port number" << endl;
 	cout << "  -U, --username=USER		override Hub username" << endl;
