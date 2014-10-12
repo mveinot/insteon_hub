@@ -472,7 +472,7 @@ void showHelp(char *in_progname)
 	cout << "Send commands and get status of Insteon devices through an Insteon Hub" << endl;
 	cout << "connected to the local network." << endl << endl;
 	cout << "  -v, --version			show version information" << endl;
-	cout << "  -h, --help			show this help message" << endl;
+	cout << "      --help			show this help message" << endl;
 	cout << "  -V, --verbose			enable extra output" << endl;
 	cout << "  -r, --relay=ID		specify relay device with its address" << endl;
 	cout << "  -d, --dimmer=ID		specify dimmer device with its address" << endl;
