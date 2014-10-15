@@ -15,9 +15,9 @@ class Device {
 	public:
 		Device(string, string, int);
 		
-		string getName();
-		string getAddress();
-		int getType();
+		string getName() const;
+		string getAddress() const;
+		int getType() const;
 };
 
 #endif

@@ -209,7 +209,7 @@ bool Insteon::setDevice(string in_device)
 	return true;
 }
 
-int Insteon::type()
+int Insteon::type() const
 {
 	return _deviceType;
 } 

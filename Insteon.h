@@ -57,7 +57,7 @@ class Insteon {
 		void setCommand(int);
 		
 		string getURL();
-		int type();
+		int type() const;
 		string typeName();
 		string getLevel();
 		string getTemp();
