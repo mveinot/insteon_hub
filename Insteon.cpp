@@ -118,6 +118,13 @@ string Insteon::getThermostatURL()
 	return _return.str();
 }
 
+string Insteon::getBufferStatusURL()
+{
+	stringstream _return;
+	_return << "http://" << _username << ":" << _password << "@" << _IP << ":" << _port << "/buffstatus.xml";
+	return _return.str();
+}
+
 string Insteon::getStatusURL()
 {
 	stringstream _return;

@@ -57,6 +57,7 @@ class Insteon {
 		void setCommand(int);
 		
 		string getURL();
+		string getBufferStatusURL();
 		int type() const;
 		string typeName();
 		string getLevel();
