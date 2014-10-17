@@ -18,3 +18,9 @@ main:	$(OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
+
+install:
+	cp -f $(TARGET) /usr/local/bin
+
+uninstall:
+	rm -f /usr/local/bin/$(TARGET)
