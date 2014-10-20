@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 		username = string(_c_username);
 		password = string(_c_password);
 
-		tinyxml2::XMLElement *devices = doc.FirstChildElement("devices");
+		tinyxml2::XMLElement *devices = doc.FirstChildElement("hub")->FirstChildElement("devices");
 		tinyxml2::XMLElement *child = devices->FirstChildElement("device");
 		while (child != NULL)
 		{
@@ -356,11 +356,13 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
+/*
 	if (device_type == THERMOSTAT && command == STATUS)
 	{
 		cout << "Querying thermostat status is still a work in progress" << endl;
 		return 0;
 	}
+*/
 
 	if (IP == "" || port == 0 || username == "" || password == "")
 	{
