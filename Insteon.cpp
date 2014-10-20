@@ -118,17 +118,18 @@ string Insteon::getThermostatURL()
 	return _return.str();
 }
 
-string Insteon::getBufferStatusURL()
-{
-	stringstream _return;
-	_return << "http://" << _username << ":" << _password << "@" << _IP << ":" << _port << "/buffstatus.xml";
-	return _return.str();
-}
-
 string Insteon::getStatusURL()
 {
 	stringstream _return;
-	_return << "http://" << _username << ":" << _password << "@" << _IP << ":" << _port << "/sx.xml?" << _device << "=1900";
+
+	if (_deviceType == THERMOSTAT)
+	{
+		_return << "http://" << _username << ":" << _password << "@" << _IP << ":" << _port << "/buffstatus.xml";
+	} else
+	{
+		_return << "http://" << _username << ":" << _password << "@" << _IP << ":" << _port << "/sx.xml?" << _device << "=1900";
+	}
+
 	return _return.str();
 }
 
