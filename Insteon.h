@@ -33,6 +33,7 @@ class Insteon {
 	private:
 		string _IP;
 		int _port;
+		int _tcp_port;
 		string _username;
 		string _password;
 		string _device;
@@ -44,10 +45,17 @@ class Insteon {
 
 		string getDeviceURL();
 		string getRelayURL();
+		string getRelayCommand();
 		string getDimmerURL();
+		string getDimmerCommand();
 		string getSceneURL();
+		string getSceneCommand();
 		string getThermostatURL();
+		string getThermostatCommand();
 		string getStatusURL();
+		string getCommandString();
+		void int2hex(const int, char*);
+		void hex2bin(const char*, unsigned char*);
 
 	public:
 		Insteon(string, int, string, string);
@@ -55,6 +63,7 @@ class Insteon {
 		bool setDevice(string);
 		void setLevel(int, bool);
 		void setCommand(int);
+		bool sendCommand();
 		
 		string getURL();
 		int type() const;
