@@ -79,7 +79,6 @@ int main(int argc, char** argv)
 		while (child != NULL)
 		{
 			DeviceList.push_back(new Device(child->Attribute("address"), child->Attribute("name"), atoi(child->Attribute("type"))));
-//			cout << child->Attribute("name") << " : " << child->Attribute("address") << endl;
 			child = child->NextSiblingElement();
 		}
 	}
@@ -356,13 +355,11 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-/*
 	if (device_type == THERMOSTAT && command == STATUS)
 	{
 		cout << "Querying thermostat status is still a work in progress" << endl;
 		return 0;
 	}
-*/
 
 	if (IP == "" || port == 0 || username == "" || password == "")
 	{
@@ -389,6 +386,12 @@ int main(int argc, char** argv)
 			cout << "Converted dim level:         " << insteon.getLevel() << endl;
 		if (device_type == THERMOSTAT)
 			cout << "Converted temperature:       " << insteon.getTemp() << endl;
+	}
+
+	if (command != STATUS)
+	{
+		insteon.sendCommand();
+		return 0;
 	}
 
 	if (verbose || no_action)
