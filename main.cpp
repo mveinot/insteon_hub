@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <curl/curl.h>
 #include <getopt.h>
 #include <vector>
 #include "tinyxml2.h"
@@ -18,16 +17,11 @@ using namespace std;
 #define required_argument 1
 #define optional_argument 2
 
-size_t curl_to_string(void *ptr, size_t size, size_t count, void *stream);
 void showHelp(char *in_progname);
 void showVersion();
 
 int main(int argc, char** argv)
 {
-	long http_code = 0;
-	CURL *curl;
-	CURLcode res;
-
 	int _return = 1;
 	int index;
 	int iarg = 0;
@@ -388,102 +382,34 @@ int main(int argc, char** argv)
 			cout << "Converted temperature:       " << insteon.getTemp() << endl;
 	}
 
-	if (command != STATUS)
+	insteon.sendCommand();
+	if (command == STATUS)
 	{
-		insteon.sendCommand();
-		return 0;
-	}
-
-	if (verbose || no_action)
-	{
-		cout << "Insteon Hub URL:             " << insteon.getURL() << endl;
-		if (no_action)
-			return 0;
-	}
-
-	//Initializing the CURL module
-	curl = curl_easy_init();
- 
-	if(curl)
-	{
-		FILE *devnull;
-
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_to_string);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &pagedata);
-		curl_easy_setopt(curl,CURLOPT_URL, insteon.getURL().c_str());
-		if (verbose)
-			cout << "Sending command..." << endl;
-		res = curl_easy_perform(curl);
-
-		if (verbose)
+		int level = insteon.getLastStatus();
+		int status_pct = (level * 100) / 255;
+		if (device_type == RELAY)
 		{
-			cout << "Hub returned:" << endl;
-			cout << pagedata << endl;
-		}
-
-		if (command == STATUS)
-		{
-			tinyxml2::XMLDocument results;
-			results.Parse(pagedata.c_str());
-			const char* status_code = results.FirstChildElement("Xs")->FirstChildElement("X")->Attribute("D");
-			char _c_status[3];
-			_c_status[0] = status_code[10];
-			_c_status[1] = status_code[11];
-			_c_status[2] = '\0';
-			string status = string(_c_status);
-
-			stringstream ss;
-			unsigned int status_hex;
-			int status_pct;
-			ss << std::hex << status;
-			ss >> status_hex;
-
-			status_pct = (static_cast<int>(status_hex) * 100) / 255;
-			
-			if (verbose)
-				cout << "Raw code: " << status_code << "; Status info: " << status << endl;
-
-			if (status == "XX")
+			switch (status_pct)
 			{
-				cout << "Device " << device << " status is unknown." << endl;
-			} else
-			{
-				if (status_pct == 0)
-				{
-					cout << "Device " << device << " is off." << endl;
-				} else
-				{
-					cout << "Device " << device << " is on. Level is: " << status_pct << "%" << endl;
-				}
+				case 100:
+					cout << "Device is on" << endl;
+					break;
+				case 0:
+					cout << "Device is off" << endl;
+					break;
+				default:
+					cout << "Unknown status" << endl;
 			}
-		}
- 
-		if(CURLE_OK == res)
+		} else if (device_type == DIMMER)
 		{
-			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-			_return = http_code;
-/*
-			if(http_code == 200)
-			{
-				_return = 0;
-            		} else
-			{
-				_return = 1;
-			}
-*/
+			if (status_pct > 0)
+				cout << "Device is on at " << status_pct << "%" << endl;
+			if (status_pct == 0)
+				cout << "Device is off" << endl;
 		}
-	} else
-	{
-		_return = 1;
 	}
 
-	return _return;
-}
-
-size_t curl_to_string(void *ptr, size_t size, size_t count, void *stream)
-{
-	((string*)stream)->append((char*)ptr, 0, size*count);
-	return size * count;
+	return 0;
 }
 
 void showHelp(char *in_progname)
