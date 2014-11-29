@@ -1,4 +1,5 @@
 #include "Insteon.h"
+#include <iostream>
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -240,6 +241,13 @@ string Insteon::getStatusURL()
 	return _return.str();
 }
 
+string Insteon::getStatusCommand()
+{
+	stringstream _return;
+	_return << "0262" << _device << "0F1900";
+	return _return.str();
+}
+
 string Insteon::getURL()
 {
 	if (_command == STATUS)
@@ -262,6 +270,9 @@ string Insteon::getURL()
 
 string Insteon::getCommandString()
 {
+	if (_command == STATUS)
+		return getStatusCommand();
+
 	switch (_deviceType)
 	{
 		case RELAY:
@@ -273,7 +284,7 @@ string Insteon::getCommandString()
 		case SCENE:
 			return getSceneCommand();
 		default:
-			return "0260";
+			return getStatusCommand();
 	}
 }
 
@@ -336,6 +347,9 @@ bool Insteon::sendCommand()
 			length = 4;
 	}
 
+	if (_command == STATUS)
+		length = 8;
+
 	n = write(sockfd,buffer,length);
 	if (n < 0)
 		return false;
@@ -346,6 +360,7 @@ bool Insteon::sendCommand()
 	n = read(sockfd,buffer,256);
 	if (n < 0)
 		return false;
+
 /*
 	printf("Result: (%d) %s\n", n, buffer);
 	int i;
@@ -355,6 +370,27 @@ bool Insteon::sendCommand()
 	}
 	printf("\n");
 */
+
+	if (_command == STATUS)
+	{
+		sleep(2);
+
+	do {
+		bzero(buffer, 256);
+		n = read(sockfd,buffer,256);
+		if (n < 0)
+			return false;
+	} while (n != 11);
+
+	_return_value = buffer[10];
+//	printf("Result: (%d) %s\n", n, buffer);
+//	for (int i = 10; i < n; i++)
+//	{
+//		printf("%02X", buffer[10]);
+//	}
+//	printf("\n");
+	}
+
 	close(sockfd);
 	return true;
 }
@@ -426,6 +462,12 @@ int Insteon::type() const
 {
 	return _deviceType;
 } 
+
+int Insteon::getLastStatus()
+{
+//	cout << ": " << static_cast<int>(_return_value);
+	return (int)_return_value;
+}
 
 string Insteon::typeName()
 {
