@@ -42,6 +42,7 @@ class Insteon {
 		int _level;
 		int _random;
 		bool _level_is_raw;
+		unsigned char _return_value;
 
 		string getDeviceURL();
 		string getRelayURL();
@@ -53,6 +54,7 @@ class Insteon {
 		string getThermostatURL();
 		string getThermostatCommand();
 		string getStatusURL();
+		string getStatusCommand();
 		string getCommandString();
 		void int2hex(const int, char*);
 		void hex2bin(const char*, unsigned char*);
@@ -64,6 +66,7 @@ class Insteon {
 		void setLevel(int, bool);
 		void setCommand(int);
 		bool sendCommand();
+		int getLastStatus();
 		
 		string getURL();
 		int type() const;
