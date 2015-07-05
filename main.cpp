@@ -35,9 +35,6 @@ int main(int argc, char** argv)
 	bool no_action = false;
 
 	string IP;
-	//int port = 0;
-	//string username;
-	//string password;
 
 	string device;
 	string pagedata;
@@ -59,14 +56,8 @@ int main(int argc, char** argv)
 	} else
 	{
 		const char *_c_ip = doc.FirstChildElement("hub")->FirstChildElement("ip")->GetText();
-		const char *_c_port = doc.FirstChildElement("hub")->FirstChildElement("port")->GetText();
-		const char *_c_username = doc.FirstChildElement("hub")->FirstChildElement("username")->GetText();
-		const char *_c_password = doc.FirstChildElement("hub")->FirstChildElement("password")->GetText();
 
 		IP = string(_c_ip);
-		port = atoi(_c_port);
-		username = string(_c_username);
-		password = string(_c_password);
 
 		tinyxml2::XMLElement *devices = doc.FirstChildElement("hub")->FirstChildElement("devices");
 		tinyxml2::XMLElement *child = devices->FirstChildElement("device");
@@ -87,9 +78,6 @@ int main(int argc, char** argv)
 		{"thermostat",	required_argument,	NULL, 't'},
 		{"scene",	required_argument,	NULL, 's'},
 		{"address",	required_argument,	NULL, 'a'},
-		{"port",	required_argument,	NULL, 'p'},
-		{"username",	required_argument,	NULL, 'U'},
-		{"password",	required_argument,	NULL, 'P'},
 		{"level",	required_argument,	NULL, 'l'},
 		{"on",		no_argument,		NULL, ON},
 		{"off",		no_argument,		NULL, OFF},
@@ -134,24 +122,6 @@ int main(int argc, char** argv)
 
 				if (verbose)
 					cout << "Overriding IP: " << IP << endl;
-				break;
-			case 'p':
-				port = atoi(optarg);
-
-				if (verbose)
-					cout << "Overriding Port: " << port << endl;
-				break;
-			case 'U':
-				username = optarg;
-
-				if (verbose)
-					cout << "Overriding User: " << username << endl;
-				break;
-			case 'P':
-				password = optarg;
-
-				if (verbose)
-					cout << "Overriding Password." << username << endl;
 				break;
 			case 'r':
 				device_type = RELAY;
@@ -355,7 +325,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	if (IP == "" || port == 0 || username == "" || password == "")
+	if (IP == "")
 	{
 		cout << "Connection details not provided. Unable to proceed." << endl << endl;
 		showHelp(argv[0]);
@@ -367,7 +337,7 @@ int main(int argc, char** argv)
 		pct_level = ((pct_level * 9) / 5) + 32;
 	}
 
-	Insteon insteon(IP, port, username, password); 
+	Insteon insteon(IP); 
 	insteon.setType(device_type);
 	insteon.setDevice(device);
 	insteon.setCommand(command);
@@ -427,9 +397,6 @@ void showHelp(char *in_progname)
 	cout << "      --name=ALIAS		specify device using a defined alias" << endl;
 	cout << "      --list			list all defined device aliases" << endl;
 	cout << "  -a, --address=IP		override Hub IP address" << endl;
-	cout << "  -p, --port=PORT		override Hub port number" << endl;
-	cout << "  -U, --username=USER		override Hub username" << endl;
-	cout << "  -P, --password=PASS		override Hub password" << endl;
 	cout << "  -l, --level=LEVEL		set dim/bright percent" << endl;
 	cout << "      --byte_value		interpret LEVEL as byte value (0-255)" << endl;
 	cout << "      --heat			set HVAC system to heating mode" << endl;
@@ -448,8 +415,6 @@ void showHelp(char *in_progname)
 	cout << "      --bright			send Bright command to specified device" << endl;
 	cout << "      --no_action		Display the URL that is generated, but don't send it to the Hub" << endl;
 	cout << "      --status			retrieve status of specified device" << endl << endl;
-	cout << "Exit status:" << endl;
-	cout << " Returns HTTP status code from hub if no other errors, or 1 otherwise." << endl;
 }
 
 void showVersion()
