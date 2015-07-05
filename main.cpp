@@ -35,9 +35,9 @@ int main(int argc, char** argv)
 	bool no_action = false;
 
 	string IP;
-	int port = 0;
-	string username;
-	string password;
+	//int port = 0;
+	//string username;
+	//string password;
 
 	string device;
 	string pagedata;
