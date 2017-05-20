@@ -53,6 +53,8 @@ int main(int argc, char** argv)
 	if (doc.ErrorID())
 	{
 		cout << "Config file not found or XML format error." << endl;
+		cout << doc.GetErrorStr1() << endl;
+		cout << doc.GetErrorStr2() << endl;
 	} else
 	{
 		const char *_c_ip = doc.FirstChildElement("hub")->FirstChildElement("ip")->GetText();
